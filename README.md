@@ -27,8 +27,15 @@ This library contains basic Mandani fuzzy inference system classes. Moreover, a 
 - Or directly consult author by mail
 
 ## Implemented features
-- 
+- Generates Mamdani FIS
+- Plots all rules of Mamdani FIS
+- Plots all relevant response surfaces of FIS
+- Compute manufacturing effort for braiding
+- Provides reasoning and advice for a given scenerio
+- Computes production costs for braiding
+- Computes sensitivities of effort model
+
 
 ## Planned features:
-- 
+- Further manufacturing effort models
 

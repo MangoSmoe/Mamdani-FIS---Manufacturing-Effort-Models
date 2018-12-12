@@ -17,13 +17,13 @@ This library contains basic Mandani fuzzy inference system classes. Moreover, a 
 - See each class' comments
 - Simply run "BraidME.py" and chose test case via variable TestCase
 - The following test cases are defined via variable TestCase:
-   - TestX \t Just evaluate effort
- o TestXSens ... Compute effort and sensitivities
- o PlotSurfaces ... Plot all relevant response surfaces
- o PlotRules ... Plot all implemented rules
- o Costs     ... Compute costs of given design
- o MEInpDict ... Generate input dictionary
- o MEInpDictSens ... Compute input and sensitivities
+   - **TestX**:Just evaluate effort
+   - **TestXSens** Compute effort and sensitivities
+   - **PlotSurfaces** Plot all relevant response surfaces
+   - **PlotRules** Plot all implemented rules
+   - **Costs** Compute costs of given design
+   - **MEInpDict** Generate input dictionary
+   - **MEInpDictSens** Compute input and sensitivities
 - Or directly consult author by mail
 
 ## Implemented features

@@ -13,8 +13,8 @@ Dr Markus Edwin Schatz (schatz@llb.mw.tum.de)
 ## Description:
 This library contains basic Mandani fuzzy inference system classes. Moreover, a manufacturing effort model for predicting effort and costs of braided structures is provided. For more details consult the following papers:
 
-[1] M. Schatz, A. Hermanutz, H. Baier: **Multi-criteria optimization of an aircraft propeller considering manufacturing**, Structural and Multidisciplinary Optimization Vol. 55, Issue 3, pp 899–911, https://doi.org/10.1007/s00158-016-1541-z
-[2] M. Schatz, H. Baier: **An approach toward the incorporation of soft aspects such as manufacturing efforts into structural design optimization**, Journal on Mechanics Engineering and Automation Vol. 4, Issue 11, 10.17265/2161-623X/2014.11.001
+[ ] M. Schatz, A. Hermanutz, H. Baier: **Multi-criteria optimization of an aircraft propeller considering manufacturing**, Structural and Multidisciplinary Optimization Vol. 55, Issue 3, pp 899–911, DOI https://doi.org/10.1007/s00158-016-1541-z
+[ ] M. Schatz, H. Baier: **An approach toward the incorporation of soft aspects such as manufacturing efforts into structural design optimization**, Journal on Mechanics Engineering and Automation Vol. 4, Issue 11, DOI: [10.17265/2161-623X/2014.11.001](http://www.davidpublisher.org/index.php/Home/Article/index?id=719.html)
 
 
 ## How to run:

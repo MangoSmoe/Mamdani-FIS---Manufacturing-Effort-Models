@@ -7,13 +7,13 @@
 # Mail:          schatz@llb.mw.tum.de                              #
 #------------------------------------------------------------------#
 # Change-Log:                                                      #
-# 2016-08-28     Definition of class:                              # 
+# 2016-08-28     Definition of class:                              #
 #                o First definition of class                       #
-# 2017-09-24     Unifying class:                                   # 
+# 2017-09-24     Unifying class:                                   #
 #                o Incorporated FuzzyME classes as base classes    #
 #                o BraidME inherited all instances of FuzzyME      #
 #                o Added description and usage outline             #
-# 2018-12-12     Publicate work:                                   # 
+# 2018-12-12     Publicate work:                                   #
 #                o MDPI: Journal of Composite Science              #
 #------------------------------------------------------------------#
 # Title: Enabling Composite Optimization Through Soft Computing Of #
@@ -22,14 +22,14 @@
 #        - Journal of Composite Science -                          #
 #------------------------------------------------------------------#
 # Usage of inherited class BraidME:                                #
-#    Import Braid-FIS class:                                       # 
+#    Import Braid-FIS class:                                       #
 #         from BraidME import BraidME                              #
-#    Define a Braid-FIS object:                                    # 
+#    Define a Braid-FIS object:                                    #
 #         BraidMEM = BraidME()                                     #
-#    Initialize and save the Braid-FIS:                            # 
+#    Initialize and save the Braid-FIS:                            #
 #         BraidMEM.CreateAndSaveBraidFIS()                         #
 #         -> BraidMEM.LoadBraidFIS() would then load FIS           #
-#    Compute efforts based on last input x (see below):            # 
+#    Compute efforts based on last input x (see below):            #
 #         ME=BraidMEM.ComputeResponse(x)                           #
 #         -> You can pass x as list as defined below or as an      #
 #            dictionary which contains lists as follows:           #
@@ -42,7 +42,7 @@
 #            o ProfileAspect (optional). Aspect ratio of profile   #
 #            o PlyNum (optional)     ... Number of plies           #
 #            o PatchNum (optional)   ... Number of patches         #
-#    Provide reasoning for input x (see below):                    # 
+#    Provide reasoning for input x (see below):                    #
 #         Reasoning=BraidMEM.Reasoning()                           #
 #    Compute ME response and its derivative including reasoning    #
 #         [ME, dMEdx, Reasoning] = BraidMEM.ComputeRespAndSens(x)  #
@@ -53,13 +53,13 @@
 #         BraidMEM.PlotAllResponseSurfaces(x,PlotSamplePerAx=100)  #
 #------------------------------------------------------------------#
 # Input x for BraidME class:                                       #
-#    BraidAngle [Deg] ... [15 75]) -> 25                           # 
-#    YarnWidth  [mm]  ... [1.5 4]  -> 2.7                          #    
-#    Curvature  [-]   ... [0 10]   -> 10  R/d                      #      
-#    EdgeRadius [mm]  ... [3 5]    -> 5                            #    
-#    AspectRatio[-]   ... [2 4]    -> 2                            #   
-#    PlyNum     [-]   ... [5 20]   -> 5                            #    
-#    PatchNum   [-]   ... [0 5]    -> 0                            #   
+#    BraidAngle [Deg] ... [15 75]) -> 25                           #
+#    YarnWidth  [mm]  ... [1.5 4]  -> 2.7                          #
+#    Curvature  [-]   ... [0 10]   -> 10  R/d                      #
+#    EdgeRadius [mm]  ... [3 5]    -> 5                            #
+#    AspectRatio[-]   ... [2 4]    -> 2                            #
+#    PlyNum     [-]   ... [5 20]   -> 5                            #
+#    PatchNum   [-]   ... [0 5]    -> 0                            #
 #------------------------------------------------------------------#
 #------------------------------------------------------------------#
 
@@ -83,9 +83,9 @@ from FuzzyTools import Pimf
 from FuzzyTools import Const
 ''' Alternative membership functions
 from FuzzyTools import Zmf
-from FuzzyTools import Smf 
+from FuzzyTools import Smf
 '''
-	
+
 class BraidME(FIS,Gauss2mf,Gaussmf,Trimf,Pimf,Const):        # Base class for all fuzzy tools
     nBobins         = 16.0*12
     MaxPatches      = 15.
@@ -97,7 +97,7 @@ class BraidME(FIS,Gauss2mf,Gaussmf,Trimf,Pimf,Const):        # Base class for al
             'ProfileMinRadius', 'PathRadii', 'ProfileAspect', 'PlyNum', \
             'PatchNum', 'BraidingAngle']
         self.UpdateHornGearParams()
-            
+
     def UpdateHornGearParams(self):
         self.nHornGears      = cp.deepcopy(self.nBobins/2.0)
         self.HornGearSpeed   = 120.0*1.0/60.0 # 120 rmp is common!
@@ -147,7 +147,7 @@ class BraidME(FIS,Gauss2mf,Gaussmf,Trimf,Pimf,Const):        # Base class for al
         self.SubFIS1.Rules['ModeratePTimes'] = ['AND','BraidAngle','Moderate','YarnWidth','Moderate','THEN','Sub1','Moderate']
         self.SubFIS1.Rules['HighPTimes'] = ['AND','BraidAngle','ModerateBig','YarnWidth','Moderate','THEN','Sub1','High']
         self.SubFIS1.Rules['VeryHighPTimes'] = ['AND','BraidAngle','Big','YarnWidth','Moderate','THEN','Sub1','VeryHigh']
-        
+
         # Sub-FIS 2
         # ------------------------------------------------------------------- #
         self.SubFIS2        = FIS(FISname='SubFIS2:CombinationBraidAngleAndRatioOfRadiusDiameter')
@@ -220,7 +220,7 @@ class BraidME(FIS,Gauss2mf,Gaussmf,Trimf,Pimf,Const):        # Base class for al
         self.SubFIS2.Rules['ModerateCombAngleCurvature2'] = ['AND','BraidAngle','Big','RadiusDiameterRatio','Bigger','THEN','Sub2','Moderate']
         self.SubFIS2.Rules['AlmostNoCurvature8'] = ['AND','BraidAngle','Big','RadiusDiameterRatio','VeryBig','THEN','Sub2','VeryLow']
         self.SubFIS2.Rules['NoCurvature5'] = ['AND','BraidAngle','Big','RadiusDiameterRatio','NoCurvature','THEN','Sub2','VeryLow']
-        
+
         # Sub-FIS 3
         # ------------------------------------------------------------------- #
         self.SubFIS3        = FIS(FISname='SubFIS3:CombinationYarnWidthAndRatioOfRadiusDiameter')
@@ -278,7 +278,7 @@ class BraidME(FIS,Gauss2mf,Gaussmf,Trimf,Pimf,Const):        # Base class for al
         self.SubFIS3.Rules['LowCurvature4'] = ['AND','YarnWidth','Big','RadiusDiameterRatio','Bigger','THEN','Sub2','Low']
         self.SubFIS3.Rules['LowCurvature5'] = ['AND','YarnWidth','Big','RadiusDiameterRatio','VeryBig','THEN','Sub2','Low']
         self.SubFIS3.Rules['NoCurvature4'] = ['AND','YarnWidth','Big','RadiusDiameterRatio','NoCurvature','THEN','Sub2','VeryLow']
-        
+
         # MAIN-FIS
         # ------------------------------------------------------------------- #
         self.MainFIS        = FIS(FISname='Manufacturing Effort Model For Braiding',AndMethod='min')
@@ -352,16 +352,16 @@ class BraidME(FIS,Gauss2mf,Gaussmf,Trimf,Pimf,Const):        # Base class for al
         # ------------------------------------------------------------------- #
         self.BraidFIS = [self.SubFIS1,self.SubFIS2,self.SubFIS3,self.MainFIS]
         pickle.dump(self.BraidFIS,open(self.CurPath+'/BraidFIS.p','wb'))
-        
+
         # Store optimal values
-        # ------------------------------------------------------------------- #        
+        # ------------------------------------------------------------------- #
         self.FISExtremalMinInput = dict()        # Best configuration
         self.FISExtremalMinInput['BraidAngle']            = 25.
         self.FISExtremalMinInput['YarnWidth']             = 2.7
         self.FISExtremalMinInput['RadiusDiameterRatio']   = 10.
         self.FISExtremalMinInput['EdgeRadius']            = 3.
-        self.FISExtremalMinInput['AspectRatio']           = 2.  
-        self.FISExtremalMinInput['PlyNum']                = 5.   
+        self.FISExtremalMinInput['AspectRatio']           = 2.
+        self.FISExtremalMinInput['PlyNum']                = 5.
         self.FISExtremalMinInput['PatchNum']              = 0.
         self.FISExtremalMaxInput = dict()        # Worst configuration
         self.FISExtremalMaxInput['BraidAngle']            = 75.
@@ -371,11 +371,11 @@ class BraidME(FIS,Gauss2mf,Gaussmf,Trimf,Pimf,Const):        # Base class for al
         self.FISExtremalMaxInput['AspectRatio']           = 4.
         self.FISExtremalMaxInput['PlyNum']                = 20.
         self.FISExtremalMaxInput['PatchNum']              = self.MaxPatches
-        self.FISxMinInputList = [25., 2.7, 10., 3., 2.,  5., 0.]        
+        self.FISxMinInputList = [25., 2.7, 10., 3., 2.,  5., 0.]
         self.FISxMaxInputList = [75., 4.,   0., 5., 4., 20., self.MaxPatches]
-        
+
         # Store elaboration hints
-        # ------------------------------------------------------------------- #  
+        # ------------------------------------------------------------------- #
         ElaborationHints = dict()
         # Hint 1
         Hint = 'Increase take-up speed {1}; Reduce horn gear speed {2}'
@@ -437,30 +437,30 @@ class BraidME(FIS,Gauss2mf,Gaussmf,Trimf,Pimf,Const):        # Base class for al
         Hint = 'Increase radius of lengthwise curvature {1}; Reduce diameter of mandrel {1}'
         ElaborationHints[Hint] = {'Rule': ['CriticalCombAngleCurvature3', 'CriticalCombAngleCurvature4', \
             'CombAngleCurvature2', 'AlmostNoCurvature4'], \
-            'VerbalVariable': ['BraidAngle']}    
+            'VerbalVariable': ['BraidAngle']}
         # Hint 10
         Hint = 'Increase radius of lengthwise curvature {1}; Reduce diameter of mandrel {1}'
         ElaborationHints[Hint] = {'Rule': ['OverCriticalCombAngleCurvature3', 'CriticalCombAngleCurvature2', \
             'ModerateCurvature1', 'LowCurvature3'], \
-            'VerbalVariable': ['YarnWidth']} 
+            'VerbalVariable': ['YarnWidth']}
         # Hint 11
         Hint = 'Increase edge radii {1}'
         ElaborationHints[Hint] = {'Rule': ['AllBad'], \
-            'VerbalVariable': ['EdgeRadius']} 
+            'VerbalVariable': ['EdgeRadius']}
         # Hint 12
         Hint = 'Reduce aspect ratio {1}'
         ElaborationHints[Hint] = {'Rule': ['AllBad'], \
-            'VerbalVariable': ['AspectRatio']} 
+            'VerbalVariable': ['AspectRatio']}
         # Hint 13
         Hint = 'Reduce number of braid layers {1}'
         ElaborationHints[Hint] = {'Rule': ['AllBad'], \
-            'VerbalVariable': ['PlyNum']} 
+            'VerbalVariable': ['PlyNum']}
         # Hint 14
         Hint = 'Reduce number of UD patches {1}'
         ElaborationHints[Hint] = {'Rule': ['AllBad'], \
-            'VerbalVariable': ['PatchNum']} 
+            'VerbalVariable': ['PatchNum']}
         self._ElaborationHints = ElaborationHints
-        
+
     def LoadBraidFIS(self,FileName='BraidFIS',Path=[]):
         if not Path:
             Path = self.CurPath
@@ -479,7 +479,7 @@ class BraidME(FIS,Gauss2mf,Gaussmf,Trimf,Pimf,Const):        # Base class for al
         self.InVals                    = InVals
     def __call__(self,x):
         if isinstance(x, dict):
-            UList = x['ProfileCircumferences']       
+            UList = x['ProfileCircumferences']
             PhiList = x['BraidingAngle']
             lList = x['PathLength']
             bList = list()
@@ -517,10 +517,10 @@ class BraidME(FIS,Gauss2mf,Gaussmf,Trimf,Pimf,Const):        # Base class for al
                 patchNumList = [0.]*len(UList)
             if 'SupPathRadii' in x.keys():
                 RSupList = x['SupPathRadii']
-                
+
             (MEList, MEReasonList, MEHintList) = (list(), list(), list())
             xList = list()
-            for (iPhi, ib, iRD, ir, iab, iPlyNum, iPatch) in zip(PhiList, bList, RDList, rList, abList, plyNumList, patchNumList): 
+            for (iPhi, ib, iRD, ir, iab, iPlyNum, iPatch) in zip(PhiList, bList, RDList, rList, abList, plyNumList, patchNumList):
                 x = cp.deepcopy([iPhi, ib, iRD, ir, iab, iPlyNum, iPatch])
                 MEList.append(self._ComputeME(x))
                 MEReasonList.append(self.Reasoning())
@@ -530,7 +530,7 @@ class BraidME(FIS,Gauss2mf,Gaussmf,Trimf,Pimf,Const):        # Base class for al
             self.xList = xList
             self.MEReasonList = MEReasonList
             self.MEHintList = MEHintList
-            
+
             METrap = 0.
             for (iL, iMEb, iMEa) in zip(lList, MEList[1:], MEList[:-1]):
                 METrap += iL/2*(iMEa+iMEb)
@@ -538,7 +538,7 @@ class BraidME(FIS,Gauss2mf,Gaussmf,Trimf,Pimf,Const):        # Base class for al
             return METrap
         else:
             return self._ComputeME(x)
-        
+
     def _ComputeME(self,x):
         # Initializations
         # ------------------------------------------------------------------- #
@@ -563,7 +563,7 @@ class BraidME(FIS,Gauss2mf,Gaussmf,Trimf,Pimf,Const):        # Base class for al
                     xOrg.append(iyU)
             else:
                 xOrg.append(iX)
-                
+
         # Compute FIS response at bound
         # ------------------------------------------------------------------- #
         self._WriteXinDict(xOrg)
@@ -571,9 +571,9 @@ class BraidME(FIS,Gauss2mf,Gaussmf,Trimf,Pimf,Const):        # Base class for al
         self.InVals['Sub2']            = self.BraidFIS[1].EvalFIS(self.InVals)
         self.InVals['Sub3']            = self.BraidFIS[2].EvalFIS(self.InVals)
         MEOrg = self.BraidFIS[3].EvalFIS(self.InVals)
-        
+
         # Bound has been violated
-        # ------------------------------------------------------------------- #        
+        # ------------------------------------------------------------------- #
         if BoundViolation:
             MEReturn = MEOrg
             for (iX, iyL, iyU, iy0, iy1, iME0, iME1) in zip(x, yL, yU, y0, y1, ME0, ME1):
@@ -584,7 +584,7 @@ class BraidME(FIS,Gauss2mf,Gaussmf,Trimf,Pimf,Const):        # Base class for al
             return MEReturn
         else:
             return MEOrg
-        
+
     def VarInfo(self):
         VarInfoStr = '# BraidAngle [Deg] ... [15 75]) -> 25\n'
         VarInfoStr = VarInfoStr+'# YarnWidth  [mm]  ... [1.5 4]  -> 2.7\n'
@@ -592,16 +592,16 @@ class BraidME(FIS,Gauss2mf,Gaussmf,Trimf,Pimf,Const):        # Base class for al
         VarInfoStr = VarInfoStr+'# EdgeRadius [mm]  ... [3 5]    -> 5\n'
         VarInfoStr = VarInfoStr+'# AspectRatio[-]   ... [2 4]    -> 2\n'
         VarInfoStr = VarInfoStr+'# PlyNum     [-]   ... [5 20]   -> 5\n'
-        VarInfoStr = VarInfoStr+'# PatchNum   [-]   ... [0 MaxPatches] -> 0\n' 
+        VarInfoStr = VarInfoStr+'# PatchNum   [-]   ... [0 MaxPatches] -> 0\n'
         self.VarInfoStr
         return self.VarInfoStr
-        
+
     def ComputeResponse(self,x):
         return self(x)
-        
+
     def ComputeRespAndSens(self,x):
         '''
-        Computes sensitivities! 
+        Computes sensitivities!
         - if x is a dict, than all sensitivities need be passed with SENS attached to key
         - returns: ME, MEsens, Reason (if dict, than last one is a list!)
         '''
@@ -613,9 +613,9 @@ class BraidME(FIS,Gauss2mf,Gaussmf,Trimf,Pimf,Const):        # Base class for al
                 nDV = np.size(x['BraidingAngleSENS'][0])
             except:
                 ErrorMSG = 'No sensitivities in input dictionary or wrong defined!'
-                print ErrorMSG 
+                print(ErrorMSG)
                 sys.exit(ErrorMSG)
-                return ErrorMSG 
+                return ErrorMSG
             MEsens = np.zeros(np.shape(x['BraidingAngleSENS'][0]))
             (RespKeys, SensKeys) = (list(), list())
             for iKey in x.keys():
@@ -627,11 +627,11 @@ class BraidME(FIS,Gauss2mf,Gaussmf,Trimf,Pimf,Const):        # Base class for al
             '''
             if len(RespKeys)!=len(SensKeys):
                 ErrorMSG = 'Not all sensitivities via SENS are given!'
-                print ErrorMSG 
+                print ErrorMSG
                 sys.exit(ErrorMSG)
-                return ErrorMSG 
+                return ErrorMSG
             '''
-            
+
             # Compute and store base results
             # --------------------------------------------------------------- #
             MEorg = self(x)
@@ -639,7 +639,7 @@ class BraidME(FIS,Gauss2mf,Gaussmf,Trimf,Pimf,Const):        # Base class for al
             xList = self.xList
             MEReasonList = self.MEReasonList
             MEHintList = self.MEHintList
-            
+
             # Compute FIS sensitivities
             # --------------------------------------------------------------- #
             for DictKey in SensKeys:
@@ -647,7 +647,7 @@ class BraidME(FIS,Gauss2mf,Gaussmf,Trimf,Pimf,Const):        # Base class for al
                     MEInp = cp.deepcopy(x)
                     MEInp[DictKey][iME] += self.FDTol
                     MEsens += ((self(MEInp)-MEorg)/self.FDTol)*x[DictKey+'SENS'][iME]
-            
+
             # Store results in object
             # --------------------------------------------------------------- #
             self.MEList = MEList
@@ -666,7 +666,7 @@ class BraidME(FIS,Gauss2mf,Gaussmf,Trimf,Pimf,Const):        # Base class for al
                 X[i]+= self.FDTol
                 rSens.append((self(X)-r0)/self.FDTol)
             return [r0,np.array(rSens),Reason]
-        
+
     def Reasoning(self):
         # Compute FIS reasoning
         # ------------------------------------------------------------------- #
@@ -684,11 +684,11 @@ class BraidME(FIS,Gauss2mf,Gaussmf,Trimf,Pimf,Const):        # Base class for al
                 Reason                  = self.BraidFIS[2].GetMaxAntecentOfMaxImplicationKey()
         self._ElaborationList = [CritRule, Reason[0], Reason[1]]
         return 'In rule "'+CritRule+'": "'+Reason[0]+'" is "'+Reason[1]+'"'
-        
-    def ElaborationHints(self): 
+
+    def ElaborationHints(self):
         '''
         Gives hints on how to finally elaborate design such that lowest manufacturing effort level
-        German: Ausgestaltungshinweise, sodass Herstellungsaufwaende minimal -> Konstruktionslehre: 'Ausarbeiten' 
+        German: Ausgestaltungshinweise, sodass Herstellungsaufwaende minimal -> Konstruktionslehre: 'Ausarbeiten'
         '''
         # Load elaboration hints
         ElaborationHints = self._ElaborationHints
@@ -699,10 +699,10 @@ class BraidME(FIS,Gauss2mf,Gaussmf,Trimf,Pimf,Const):        # Base class for al
                 if VerbalVariable in ElaborationHints[iHint]['VerbalVariable']:
                     return iHint
         return 'Eorror in hint computation for RULE: "%s" and VERBAL VARIABLE: "%s"'%(CritRule, VerbalVariable)
-        
+
     def ComputeYarnWidth(self,U,Phi):
         return math.cos(Phi*math.pi/180.0)*2.0*(U)/self.nBobins
-        
+
     def PlotAllResponseSurfaces(self,x,PlotSamplePerAx=100, UseTex=True, Extremal=True, \
             Language='Eng'): # 'Eng' 'Ger'
         try:
@@ -718,7 +718,7 @@ class BraidME(FIS,Gauss2mf,Gaussmf,Trimf,Pimf,Const):        # Base class for al
             fig.suptitle(r'Manufacturing Effort Model', fontsize=28, fontweight='bold')
         else:
             fig.suptitle(r'Fertigungsaufwandsmodell', fontsize=28, fontweight='bold')
-        
+
         # BraidAngle vs YarnWidth
         ax = fig.add_subplot(2, 2, 1, projection='3d')
         ax.tick_params(axis='both', which='major', labelsize=20)
@@ -746,7 +746,7 @@ class BraidME(FIS,Gauss2mf,Gaussmf,Trimf,Pimf,Const):        # Base class for al
                     TMPInput = cp.deepcopy(self.FISxMaxInputList)
                     TMPInput[0] = X[ix,jy]
                     TMPInput[1] = Y[ix,jy]
-                    ZMax[ix,jy] = self(TMPInput) 
+                    ZMax[ix,jy] = self(TMPInput)
         if Extremal:
             if Language=='Eng':
                 SurfacePlotter(fig,ax,X,Y,ZMin,[],r'Braiding angles [DEG]',r'Yarn width [mm]', AlphaVal=1.)
@@ -763,14 +763,14 @@ class BraidME(FIS,Gauss2mf,Gaussmf,Trimf,Pimf,Const):        # Base class for al
                 SurfacePlotter(fig,ax,X,Y,Z,[],r'Braiding angles [DEG]',r'Yarn width [mm]', AlphaVal=1.)
             else:
                 SurfacePlotter(fig,ax,X,Y,Z,[],r'Flechtwinkel [Grad]',r'Ablegebreite [mm]', AlphaVal=1.)
-        # BraidAngle vs RadiusDiameterRatio 
+        # BraidAngle vs RadiusDiameterRatio
         ax = fig.add_subplot(2, 2, 2, projection='3d')
         ax.tick_params(axis='both', which='major', labelsize=20)
         ax.tick_params(axis='both', which='minor', labelsize=18)
         X = np.linspace(self.SubFIS2.Input['RadiusDiameterRatio']['Range'][0], \
-            self.SubFIS2.Input['RadiusDiameterRatio']['Range'][1],num=PlotSamplePerAx)        
+            self.SubFIS2.Input['RadiusDiameterRatio']['Range'][1],num=PlotSamplePerAx)
         Y = np.linspace(self.SubFIS1.Input['BraidAngle']['Range'][0], \
-            self.SubFIS1.Input['BraidAngle']['Range'][1],num=PlotSamplePerAx)   
+            self.SubFIS1.Input['BraidAngle']['Range'][1],num=PlotSamplePerAx)
         X, Y = np.meshgrid(X, Y)
         Z = np.zeros([int(PlotSamplePerAx),int(PlotSamplePerAx)])
         if Extremal:
@@ -790,7 +790,7 @@ class BraidME(FIS,Gauss2mf,Gaussmf,Trimf,Pimf,Const):        # Base class for al
                     TMPInput = cp.deepcopy(self.FISxMaxInputList)
                     TMPInput[2] = X[ix,jy]
                     TMPInput[0] = Y[ix,jy]
-                    ZMax[ix,jy] = self(TMPInput) 
+                    ZMax[ix,jy] = self(TMPInput)
         if Extremal:
             if Language=='Eng':
                 SurfacePlotter(fig,ax,X,Y,ZMin,[],r'Ratio of radius to diameter [-]',r'Braiding angles [DEG]', AlphaVal=1.)
@@ -836,7 +836,7 @@ class BraidME(FIS,Gauss2mf,Gaussmf,Trimf,Pimf,Const):        # Base class for al
                     TMPInput = cp.deepcopy(self.FISxMaxInputList)
                     TMPInput[3] = X[ix,jy]
                     TMPInput[4] = Y[ix,jy]
-                    ZMax[ix,jy] = self(TMPInput) 
+                    ZMax[ix,jy] = self(TMPInput)
         if Extremal:
             if Language=='Eng':
                 SurfacePlotter(fig,ax,X,Y,ZMin,[],r'Edge radius [mm]',r'Aspect ratio [-]', AlphaVal=1.)
@@ -882,7 +882,7 @@ class BraidME(FIS,Gauss2mf,Gaussmf,Trimf,Pimf,Const):        # Base class for al
                     TMPInput = cp.deepcopy(self.FISxMaxInputList)
                     TMPInput[5] = X[ix,jy]
                     TMPInput[6] = Y[ix,jy]
-                    ZMax[ix,jy] = self(TMPInput) 
+                    ZMax[ix,jy] = self(TMPInput)
         if Extremal:
             if Language=='Eng':
                 SurfacePlotter(fig,ax,X,Y,ZMin,[],r'Number of plies [-]',r'Number of patches [-]', AlphaVal=1.)
@@ -902,7 +902,7 @@ class BraidME(FIS,Gauss2mf,Gaussmf,Trimf,Pimf,Const):        # Base class for al
         # Define last plot settings
         plt.tight_layout()
         plt.show()
-        
+
     def PlotBraidFISOverRules(self,NumSupportPoints=20, ShowFig=True, FigFile=None, nRulesPerPlot=7.):
         if FigFile == None:
             FigList = [None]*4
@@ -916,13 +916,13 @@ class BraidME(FIS,Gauss2mf,Gaussmf,Trimf,Pimf,Const):        # Base class for al
             ShowFig=ShowFig, FigFile=FigList[2], nRulesPerPlot=nRulesPerPlot)
         self.BraidFIS[3].PlotFuzzyInferenceSystem(NumSupportPoints=NumSupportPoints, \
             ShowFig=ShowFig, FigFile=FigList[3], nRulesPerPlot=nRulesPerPlot)
-        
+
     def PrintMEInfoList(self):
         for (iME, iReason, iX, iHint) in zip(self.MEList, self.MEReasonList, self.xList, self.MEHintList):
-            print 'Effort euals ', iME, ' because of :', iReason
-            print ' -> ME input is:', iX
-            print ' -> Possible Elaboration of design: ', iHint
-            
+            print('Effort equals ', iME, ' because of :', iReason)
+            print(' -> ME input is:', iX)
+            print(' -> Possible Elaboration of design: ', iHint)
+
     def ComputeCost(self,MEInp,tTurn=2,aPhi=0.8,aManPower=0.5):
         # tTurn     ... Turning time 10 sec according to LCC
         # aPhi      ... EUR/min for a braiding machine including ... (see paper!)
@@ -932,15 +932,15 @@ class BraidME(FIS,Gauss2mf,Gaussmf,Trimf,Pimf,Const):        # Base class for al
             # Compute Cost from here on
             if 'PathLength' not in MEInp.keys():
                 ErrorMSG = '"PathLength" not defined in MEInp, but needed!'
-                print ErrorMSG 
+                print(ErrorMSG)
                 sys.exit(ErrorMSG)
                 return [], [], ErrorMSG
-        
+
             if 'PlyNum' not in MEInp.keys():
                 MEInp['PlyNum'] = [1.]*len(MEInp['PathLength'])
                 InfoStr += 'WARNING BraidME: No ply number given with MEInp["PlyNum"]\n'
                 InfoStr += '  -> Set to MEInp["PlyNum"] = [1.]*Sections\n'
-                
+
             LoopSet = zip(MEInp['BraidingAngle'][:-1], MEInp['BraidingAngle'][1:], \
                 MEInp['ProfileCircumferences'][:-1], MEInp['ProfileCircumferences'][1:], \
                 MEInp['PlyNum'], MEInp['PathLength'])
@@ -952,7 +952,7 @@ class BraidME(FIS,Gauss2mf,Gaussmf,Trimf,Pimf,Const):        # Base class for al
             for (Phi1, Phi2, U1, U2, nLayer, iLength) in LoopSet:
                 PhiMid = 0.5*(Phi1+Phi2)
                 UMid = 0.5*(U1+U2)
-                tPhi += nLayer*math.tan(PhiMid*math.pi/180.)*nHornGears*iLength/(UMid*HornGearSpeed)    
+                tPhi += nLayer*math.tan(PhiMid*math.pi/180.)*nHornGears*iLength/(UMid*HornGearSpeed)
             tDT = max(MEInp['PlyNum'])*tTurn
             tManPower = 0
             # Assembly costs
@@ -965,10 +965,10 @@ class BraidME(FIS,Gauss2mf,Gaussmf,Trimf,Pimf,Const):        # Base class for al
         else:
             ErrorMSG = 'Method needs MEInp because of length information!\n'
             ErrorMSG += '    -> See class description for MEInp definition'
-            print ErrorMSG 
+            print(ErrorMSG)
             sys.exit(ErrorMSG)
             return [], [], ErrorMSG
-    
+
 if __name__ == '__main__':
     x = [25.0, 2.7, 10, 5.0, 2.0, 5.0, 0.0]
     #x = [40.0, 3.0, 6., 4.4, 2.5, 7.0, 4.0]
@@ -979,69 +979,67 @@ if __name__ == '__main__':
     # AspectRatio[-]   ... [2 4]    -> 2
     # PlyNum     [-]   ... [5 20]   -> 5
     # PatchNum   [-]   ... [0 MaxPatches] -> 0
-    
-    from BraidME import BraidME
-    
+
     BraidMEM = BraidME()
     if os.path.isfile('BraidFIS.p'):
         # Loads existing FIS
         BraidMEM.LoadBraidFIS()
     else:
         BraidMEM.CreateAndSaveBraidFIS()
-    
-    TestCase = 'TestXSens' 
+
+    TestCase = 'TestXSens'
     # 'TestX', 'TestXSens', 'PlotSurfaces', 'PlotRules', 'MEInpDict', 'MEInpDictSens', 'Costs'
-    
+
     if TestCase == 'TestX':
         ME=BraidMEM.ComputeResponse(x)
-        print 'ME has been computed to be:'
-        print ME
+        print('ME has been computed to be:')
+        print(ME)
         Reasoning=BraidMEM.Reasoning()
-        print 'Reasoning is:'
-        print Reasoning
+        print('Reasoning is:')
+        print(Reasoning)
         BraidMEM.PlotBraidFISOverRules(NumSupportPoints=40, ShowFig=True, FigFile=None, nRulesPerPlot=7.)
-        
+
     elif TestCase == 'TestXSens':
         [ME, dMEdx, Reasoning] = BraidMEM.ComputeRespAndSens(x)
-        print 'ME has been computed to be:'
-        print ME
-        print 'Reasoning is:'
-        print Reasoning
-        print 'Sensitivity is:'
-        print dMEdx
-    
+        print('ME has been computed to be:')
+        print(ME)
+        print('Reasoning is:')
+        print(Reasoning)
+        print('Sensitivity is:')
+        print(dMEdx)
+
     elif TestCase == 'PlotSurfaces':
         BraidMEM.PlotAllResponseSurfaces(x,PlotSamplePerAx=80, UseTex=False, Extremal=False, \
             Language='Eng')
-            
+
     elif TestCase == 'PlotRules':
         BraidMEM.PlotBraidFISOverRules(NumSupportPoints=200, ShowFig=True, FigFile=None, nRulesPerPlot=7.)
-        
+
     elif TestCase == 'MEInpDict':
         MEInp = pickle.load(open(os.path.join('01-BraidME-Data','MEInp.p'),'r') )
         #print BraidMEM.ComputeResponse(MEInp)
         ME = BraidMEM.ComputeResponse(MEInp)
-        print 'ME has been computed to be:'
-        print ME
-        BraidMEM.PrintMEInfoList()   
-        
+        print('ME has been computed to be:')
+        print(ME)
+        BraidMEM.PrintMEInfoList()
+
     elif TestCase == 'MEInpDictSens':
         MEInp = pickle.load(open(os.path.join('01-BraidME-Data','MEInp.p'),'r') )
         #print BraidMEM.ComputeResponse(MEInp)
         [ME, MEsens, MEReasonList] = BraidMEM.ComputeRespAndSens(MEInp)
-        print 'ME has been computed to be:'
-        print ME
-        BraidMEM.PrintMEInfoList()  
-        
+        print('ME has been computed to be:')
+        print(ME)
+        BraidMEM.PrintMEInfoList()
+
     elif TestCase == 'Costs':
         MEInp = pickle.load(open(os.path.join('01-BraidME-Data','MEInp.p'),'rb') )
         #print BraidMEM.ComputeResponse(MEInp)
         [Costs, tPhi, InfoStr] = BraidMEM.ComputeCost(MEInp)
-        print 'Braiding costs are [EUR]:'
-        print Costs
-        print 'Braiding time is [sec]:'
-        print tPhi
-        print InfoStr
-        
-    print '----- Debug Mode -----'
-    print 'DONE'
+        print('Braiding costs are [EUR]:')
+        print(Costs)
+        print('Braiding time is [sec]:')
+        print(tPhi)
+        print(InfoStr)
+
+    print('----- Debug Mode -----')
+    print('DONE')

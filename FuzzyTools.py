@@ -7,24 +7,24 @@
 # Mail:          schatz@llb.mw.tum.de                              #
 #------------------------------------------------------------------#
 # Change-Log:                                                      #
-# 2015-02-02     Definition of class:                              # 
+# 2015-02-02     Definition of class:                              #
 #                o First definition of class                       #
 #------------------------------------------------------------------#
 #------------------------------------------------------------------#
 # Included classes are:                                            #
-#    o FIS                                                         # 
-#      - Class for creating a FIS object                           # 
-#    o MembershipFunction                                          # 
-#      - Class for handling membership functions                   # 
-#    o FuzzyTools                                                  # 
-#      - Class for fuzzification, Rule eval and defuzzification    # 
-#    o Pimf                                                        # 
-#    o Zmf                                                         # 
-#    o Trimf                                                       # 
-#    o Smf                                                         # 
-#    o Const                                                       # 
-#    o Gaussmf                                                     # 
-#    o Gauss2mf                                                    # 
+#    o FIS                                                         #
+#      - Class for creating a FIS object                           #
+#    o MembershipFunction                                          #
+#      - Class for handling membership functions                   #
+#    o FuzzyTools                                                  #
+#      - Class for fuzzification, Rule eval and defuzzification    #
+#    o Pimf                                                        #
+#    o Zmf                                                         #
+#    o Trimf                                                       #
+#    o Smf                                                         #
+#    o Const                                                       #
+#    o Gaussmf                                                     #
+#    o Gauss2mf                                                    #
 #------------------------------------------------------------------#
 #------------------------------------------------------------------#
 
@@ -58,9 +58,9 @@ def SurfacePlotter(fig,ax,X,Y,Z,SubTitel,xLabel,yLabel, AlphaVal=1.):
     proj3d.persp_transformation = orthogonal_proj
     #ax.set_zlim(-1.01, 1.01)
     #ax.zaxis.set_major_locator(LinearLocator(10))
-    #ax.zaxis.set_major_formatter(FormatStrFormatter('%.02f'))    
+    #ax.zaxis.set_major_formatter(FormatStrFormatter('%.02f'))
     cbar = fig.colorbar(surf, shrink=0.5, aspect=5)
-    cbar.ax.tick_params(labelsize=20) 
+    cbar.ax.tick_params(labelsize=20)
     if SubTitel:
         ax.set_title(SubTitel, fontsize=22)
     if xLabel:
@@ -95,23 +95,23 @@ def zmfFCT(x,Parc,Pard):
         if (Pard <= x):
             zmf = 0.0
     return zmf
-    
+
 # Base class definition
 #------------------------------------------------------------------#
 class MembershipFunction(object): # Base class for all membership functions
     NumInfiSlice = 1e3
     def __init__(self):
-        pass   
+        pass
     def CompArea(self,xL,xU,Ful):
         Area = 0.0
         xSample = np.linspace(xL,xU,num=self.NumInfiSlice)
         for ixSample in range(1,np.size(xSample)):
             xP=xSample[ixSample-1]
-            xN=xSample[ixSample]            
-            yP=self(xP)            
+            xN=xSample[ixSample]
+            yP=self(xP)
             if yP>Ful:
                 yP=Ful
-            yN=self(xN)            
+            yN=self(xN)
             if yN>Ful:
                 yN=Ful
             Area+=(xN-xP)*(yN+yP)*.5
@@ -123,16 +123,16 @@ class MembershipFunction(object): # Base class for all membership functions
         for ixSample in range(1,np.size(xSample)):
             xP=xSample[ixSample-1]
             xN=xSample[ixSample]
-            yP=self(xP)            
+            yP=self(xP)
             if yP>Ful:
                 yP=Ful
-            yN=self(xN)            
+            yN=self(xN)
             if yN>Ful:
                 yN=Ful
             Area+=(xN-xP)*(yN+yP)*.5
             CoG+=(xN-xP)*(yN+yP)*.5*((xN-xP)*.5+xP)
         return CoG/Area
-        
+
 class Gauss2mf(MembershipFunction):
     def __init__(self,Sig1, c1, Sig2, c2):
         self.Sig1 = Sig1+0.0
@@ -156,12 +156,12 @@ class Gaussmf(MembershipFunction):
         return math.exp(-(x-self.c)**2/(2.0*self.Sig**2))
     def __str__(self):
         return 'Gaussian mf'
-        
+
 class Const(MembershipFunction):
     def __init__(self, c):
         self.c   = c+0.0
     def __call__(self,x):
-        return self.c 
+        return self.c
     def __str__(self):
         return 'Constant mf'
 
@@ -173,7 +173,7 @@ class Smf(MembershipFunction):
         return smfFCT(x,self.a,self.b)
     def __str__(self):
         return 'S-shaped mf'
-        
+
 class Trimf(MembershipFunction):
     def __init__(self,a,b,c):
         self.a   = a+0.0
@@ -182,7 +182,7 @@ class Trimf(MembershipFunction):
     def __call__(self,x):
         if (x<=self.a or self.c<=x):
             return 0.0
-        if self.a!=self.b: 
+        if self.a!=self.b:
             if self.a<x and x<self.b:
                 return (x-self.a)/(self.b-self.a)
         if self.b!=self.c:
@@ -201,7 +201,7 @@ class Zmf(MembershipFunction):
         return zmfFCT(x,self.c,self.d)
     def __str__(self):
         return 'Z-shaped mf'
-        
+
 class Pimf(MembershipFunction):
     def __init__(self,a,b,c,d):
         self.a   = a+0.0
@@ -212,7 +212,7 @@ class Pimf(MembershipFunction):
         return smfFCT(x,self.a,self.b)*zmfFCT(x,self.c,self.d)
     def __str__(self):
         return 'Pi-shaped mf'
-        
+
 class FuzzyTools(object):        # Base class for all fuzzy tools
     NumInfiSlice = 1e3
     def __init__(self,Name,Type,InfoUpperStr):
@@ -240,7 +240,7 @@ class FuzzyTools(object):        # Base class for all fuzzy tools
                 for iStr in range(self.nInpRules):
                     if iStr>0:
                         InpStr = InpStr+' '+self.Rules[iRule][0]+' '
-                    InpStr = InpStr + self.Rules[iRule][iStr*2+1]+' '+self.Rules[iRule][iStr*2+2] 
+                    InpStr = InpStr + self.Rules[iRule][iStr*2+1]+' '+self.Rules[iRule][iStr*2+2]
                 self.InfoStr = self.InfoStr+'Rule '+iRule+': ('+self.Rules[iRule][0]+') '+InpStr+' '+self.Rules[iRule][self.nInpRules*2+1]+' '+self.Rules[iRule][self.nInpRules*2+2]+' '+self.Rules[iRule][self.nInpRules*2+3]+'\n'
         self.InfoStr = self.InfoStr+self.InfoUpperStr
     def ResetInput(self):
@@ -252,12 +252,12 @@ class FuzzyTools(object):        # Base class for all fuzzy tools
     def Prod(self,List):
         Prod = 1
         for i in List:
-            Prod *= i 
+            Prod *= i
         return Prod
     def Sum(self,List):
         Sum = 0
         for i in List:
-            Sum += i 
+            Sum += i
         return Sum
     def AND(self,InputVals):
         if self.AndMethod == 'min':
@@ -266,7 +266,7 @@ class FuzzyTools(object):        # Base class for all fuzzy tools
             return self.Prod(InputVals)
         else:
             if self.PrintInfo:
-                print 'Desired AND-Rule not implemented yet!'
+                print('Desired AND-Rule not implemented yet!')
             return []
     def OR(self,InputVals):
         if self.OrMethod == 'max':
@@ -275,32 +275,33 @@ class FuzzyTools(object):        # Base class for all fuzzy tools
             return self.Sum(InputVals)
         else:
             if self.PrintInfo:
-                print 'Desired OR-Rule not implemented yet!'
+                print('Desired OR-Rule not implemented yet!')
             return []
     def Fuzzify(self,InputDict):
         self.InputFuzzyVals = dict()
-        for iInput in self.Input.keys(): 
+        for iInput in self.Input.keys():
             self.InputFuzzyVals[iInput] = dict()
             for iMF in self.Input[iInput]['MF'].keys():
                 self.InputFuzzyVals[iInput][iMF] = self.Input[iInput]['MF'][iMF](InputDict[iInput])
     def EvalImpl(self,CurRule):
         InpVals=[]
         for iInput in range(self.nInpRules):
-            InpVals.append(self.InputFuzzyVals[CurRule[iInput*2+1]][CurRule[iInput*2+2]])              
+            InpVals.append(self.InputFuzzyVals[CurRule[iInput*2+1]][CurRule[iInput*2+2]])
         self.InpValsTMP = cp.deepcopy(InpVals)
-        if CurRule[0]=='AND':  
+        if CurRule[0]=='AND':
             ImpVal = self.AND(InpVals)
         elif CurRule[0]=='OR':
             ImpVal = self.OR(InpVals)
         else:
             if self.PrintInfo:
-                print 'Desired rule not implemented yet!'
-            return []    
+                print('Desired rule not implemented yet!')
+            return []
         return ImpVal
     def Defuzzify(self,ImpVal):
         Area = 0.0
         CoG = 0.0
-        iKey = self.Output.keys()[0]
+        #iKey = self.Output.keys()[0]
+        iKey = list(self.Output)[0]
         xSample = np.linspace(self.Output[iKey]['Range'][0],self.Output[iKey]['Range'][1],num=self.NumInfiSlice)
         for ixSample in range(1,np.size(xSample)):
             xP=xSample[ixSample-1]
@@ -353,12 +354,12 @@ class FuzzyTools(object):        # Base class for all fuzzy tools
                 yN=max(yNL)
             else:
                 if self.PrintInfo:
-                    print 'Desired Agg-Rule not implemented yet!'
-                return [] 
+                    print('Desired Agg-Rule not implemented yet!')
+                return []
             Area+=(xN-xP)*(yN+yP)*.5
             CoG+=(xN-xP)*(yN+yP)*.5*((xN-xP)*.5+xP)
         return CoG/Area
-        
+
 class FIS(FuzzyTools):
     Input = dict()
     Output = dict()
@@ -375,7 +376,7 @@ class FIS(FuzzyTools):
         self.PrintInfo = PrintInfo
     def __str__(self):
         self.WriteInfo()
-        return '-###############-\n-# Mandani-FIS #-\n-###############-\n'+self.InfoStr  
+        return '-###############-\n-# Mandani-FIS #-\n-###############-\n'+self.InfoStr
     def GetOutputImplicationVals(self,InputDict):
         self.EvalFIS(InputDict)
         return self.OutImpl
@@ -403,7 +404,7 @@ class FIS(FuzzyTools):
         InpMax = AntecentList.index(max(AntecentList))
         return [self.Rules[self.GetMaxImplicationKey()][InpMax*2+1], self.Rules[self.GetMaxImplicationKey()][InpMax*2+2]]
     def GetMaxImplicationKey(self):
-        return self.Rules.keys()[self.OutImpl.index(max(self.OutImpl))]   
+        return list(self.Rules)[self.OutImpl.index(max(self.OutImpl))]
     def GetInputVariables(self):
         return self.Input.keys()
     def PlotRules(self, NumSupportPoints=50):
@@ -418,14 +419,14 @@ class FIS(FuzzyTools):
                 iInputKey = RuleDef[1+iInput*2]
                 iMFKey = RuleDef[2+iInput*2]
                 MFdict['In "'+iInputKey+'-'+iMFKey+'"'] = list()
-                iRange = self.Input[iInputKey]['Range']          
+                iRange = self.Input[iInputKey]['Range']
                 xVals = iRange[0] + (iRange[1]-iRange[0])*np.linspace(0.,1.,num=NumSupportPoints)
                 for iX in xVals:
                     MFdict['In "'+iInputKey+'-'+iMFKey+'"'].append(self.Input[iInputKey]['MF'][iMFKey](iX))
             iOutoutKey = RuleDef[-2]
             iMFKey = RuleDef[-1]
             MFdict['Out "'+iOutoutKey+'-'+iMFKey+'"'] = list()
-            iRange = self.Output[iOutoutKey]['Range']          
+            iRange = self.Output[iOutoutKey]['Range']
             xVals = iRange[0] + (iRange[1]-iRange[0])*np.linspace(0.,1.,num=NumSupportPoints)
             for iX in xVals:
                 MFdict['Out "'+iOutoutKey+'-'+iMFKey+'"'].append(self.Output[iOutoutKey]['MF'][iMFKey](iX))
@@ -436,7 +437,7 @@ class FIS(FuzzyTools):
         Plots input and output membership functions of the FIS
         '''
         for iInput in self.Input.keys():
-            iRange = self.Input[iInput]['Range']          
+            iRange = self.Input[iInput]['Range']
             xVals = iRange[0] + (iRange[1]-iRange[0])*np.linspace(0.,1.,num=NumSupportPoints)
             MFdict = dict()
             for iMF in self.Input[iInput]['MF'].keys():
@@ -445,7 +446,7 @@ class FIS(FuzzyTools):
                     MFdict['MF "'+iMF+'"'].append(self.Input[iInput]['MF'][iMF](iX))
             self._InputOutputPlot(xVals,MFdict,Label='Fuzzy input membership functions of '+iInput)
         for iOutput in self.Output.keys():
-            iRange = self.Output[iOutput]['Range']          
+            iRange = self.Output[iOutput]['Range']
             xVals = iRange[0] + (iRange[1]-iRange[0])*np.linspace(0.,1.,num=NumSupportPoints)
             MFdict = dict()
             for iMF in self.Output[iOutput]['MF'].keys():
@@ -466,12 +467,12 @@ class FIS(FuzzyTools):
             logging.error('Matplotlib could not be imported!')
         # Initializations
         plt.rc('text', usetex=UseTex)
-        Rules = self.Rules.keys()        
+        Rules = self.Rules.keys()
         nRules = len(Rules)
         iPlot = 1
         nPlots = math.floor(nRules/nRulesPerPlot)+math.ceil(nRules%nRulesPerPlot/10.)
         Inputs = self.Input.keys()
-        nInputs = len(Inputs)        
+        nInputs = len(Inputs)
         FigureTitle = 'FIS of '+self.FISname
         if hasattr(self, 'FISValue'):
             PlotMEinfo = True
@@ -481,14 +482,14 @@ class FIS(FuzzyTools):
         # FIS plotting
         for RuleID, iRule in enumerate(Rules):
             if RuleID == 0:
-                if nRules>nRulesPerPlot:                
+                if nRules>nRulesPerPlot:
                     fig = plt.figure(figsize=plt.figaspect(nRulesPerPlot/(nInputs+1.)))
                     fig.suptitle( FigureTitle+'(Part %i/%i)'%(iPlot,nPlots), fontsize=14, fontweight='bold')
                     nSubPlotY = nRulesPerPlot
                     iPlot += 1
                 else:
                     fig = plt.figure(figsize=plt.figaspect(nRules/(nInputs+1.)))
-                    fig.suptitle( FigureTitle, fontsize=14, fontweight='bold')                    
+                    fig.suptitle( FigureTitle, fontsize=14, fontweight='bold')
                     nSubPlotY = nRules
                     iPlot += 1
             elif (RuleID)%(nRulesPerPlot) == 0:
@@ -543,7 +544,7 @@ class FIS(FuzzyTools):
         if FigFile != None:
             plt.savefig(FigFile)
         if ShowFig:
-            plt.show()     
+            plt.show()
         else:
             plt.close()
     def _SubPlot(self,fig, ax, xVals, yVals, SubTitel, xLabel, yLabel, ColorCode='b'):
@@ -568,7 +569,7 @@ class FIS(FuzzyTools):
         plt.title(Label)
         colormap = plt.cm.gist_rainbow
         plt.gca().set_color_cycle([colormap(i) for i in np.linspace(0, 0.9, num_plots)])
-        
+
         # Plot several different functions...
         labels = []
         for iMF in MFdict.keys():
